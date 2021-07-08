@@ -1,32 +1,57 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+      v-if="loggedIn"
+    >
+    </v-app-bar>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import { Component, Vue, Mixins } from 'vue-property-decorator';
+import userAuthMixin from '@/mixins/userAuthMixin';
+import { namespace } from 'vuex-class'
+const shared = namespace('shared');
 
-#nav {
-  padding: 30px;
+@Component
+export default class Home extends Mixins(userAuthMixin) {
+  @shared.Getter
+  public LOGIN_STATE!: boolean;
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  @shared.Action
+  public saveFooterState!: (newName: boolean) => void;
+  public setLoadingState!: (newName: boolean) => void;
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  // computed
+  get loggedIn() {
+    let localStorageLogin = localStorage.getItem('loggedIn') == "1"
+    let storeLoginState = this.LOGIN_STATE ? this.LOGIN_STATE : localStorageLogin
+    return storeLoginState
   }
+
+  
+
+  // lifecycle
+  mounted(): void {
+    this.redirectIfNotLoggedIn()
+  }
+
+  // methods
+  // ...
+}
+</script>
+
+
+<style lang="scss">
+[v-cloak] { display: none; }
+[hidden], .hidden {
+  display: none !important;
 }
 </style>
