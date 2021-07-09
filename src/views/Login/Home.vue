@@ -1,12 +1,12 @@
 <template>
-  <v-layout row wrap justify-end align-center :class="{ hidden: !isLoggedIn }">
-    <v-flex xs12 lg1 class="filler"> </v-flex>
-    <v-flex xs12 lg6 class="welcome">
+  <v-layout row wrap :class="{ hidden: !isLoggedIn }" class="login-page">
+    <v-flex xs12 md1 class="filler"> </v-flex>
+    <v-flex xs12 md6 class="welcome">
       <h1>Sharlayan Dresser</h1>
       <h2>Your unlimited glam storage</h2>
     </v-flex>
 
-    <v-flex xs12 lg4 class="login-form rounded-0">
+    <v-flex xs10 md4 class="login-form rounded-0">
       <v-alert v-if="error_message" :value="true" type="error" dismissible>{{
         error_message
       }}</v-alert>
@@ -71,13 +71,13 @@
       </v-card>
     </v-flex>
 
-    <v-flex xs12 lg1 class="filler"></v-flex>
+    <v-flex xs12 md1 class="filler"></v-flex>
   </v-layout>
 </template>
 
 <script lang="ts">
   import { Component, Vue, Mixins } from 'vue-property-decorator';
-  import HelloWorld from '../components/HelloWorld.vue';
+  import HelloWorld from '../../components/HelloWorld.vue';
   import userAuthMixin from '@/mixins/userAuthMixin';
   import { mapActions, mapGetters } from 'vuex';
   import { namespace } from 'vuex-class';
@@ -149,64 +149,6 @@
   }
 </script>
 
-<style lang="scss">
-  form {
-    width: 100%;
-  }
-
-  .login__form .v-text-field--solo > .v-input__control > .v-input__slot {
-    background-color: hsl(0, 0%, 94%) !important;
-  }
-
-  .signup__link {
-    margin-top: 60px;
-    opacity: 0.6;
-
-    a {
-      text-decoration: none;
-      color: initial;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .layout {
-    width: 100%;
-    height: 100%;
-    margin: 0 !important;
-    background-image: url('../assets/loginbackground.png');
-    background-size: cover;
-
-    > .login-form {
-      position: relative;
-      right: -50px;
-      backdrop-filter: blur(10px);
-
-      .v-sheet {
-        background-color: transparent;
-      }
-    }
-
-    > .welcome {
-      min-height: 400px;
-      text-align: center;
-      padding: 150px 0;
-      color: #fff;
-      filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.7));
-
-      h1 {
-        font-size: 56px;
-      }
-
-      h2 {
-        font-size: 20px;
-      }
-    }
-  }
-
-  .v-sheet.v-card {
-    border-radius: 0 !important;
-  }
+<style lang="scss" scoped>
+  @import './login';
 </style>

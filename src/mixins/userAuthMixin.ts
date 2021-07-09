@@ -75,7 +75,7 @@ export default class userAuthMixin extends Vue {
   public async logout(): Promise<void> {
 
     localStorage.removeItem('user_id')
-    Axios.get(`${apiEndpoint}/auth/logout`, {
+    Axios.get(`${apiEndpoint}/logout`, {
       withCredentials: true,
     }).then(() => {
       this.saveLoginState(false)
