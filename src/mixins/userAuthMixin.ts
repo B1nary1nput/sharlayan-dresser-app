@@ -63,6 +63,7 @@ export default class userAuthMixin extends Vue {
       return;
     }
 
+
     if (!localStorage.getItem('loggedIn') || !this.LOGIN_STATE) {
       localStorage.removeItem('loggedIn')
       localStorage.removeItem('user_id')
