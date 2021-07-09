@@ -1,14 +1,10 @@
-<template> 
-  <v-layout row wrap justify-end align-center :class="{ hidden: !isLoggedIn}">
-
-    <v-flex xs12 lg1 class="filler">
-      
-    </v-flex>
+<template>
+  <v-layout row wrap justify-end align-center :class="{ hidden: !isLoggedIn }">
+    <v-flex xs12 lg1 class="filler"> </v-flex>
     <v-flex xs12 lg6 class="welcome">
       <h1>Sharlayan Dresser</h1>
       <h2>Your unlimited glam storage</h2>
     </v-flex>
-
 
     <v-flex xs12 lg4 class="login-form rounded-0">
       <v-alert v-if="error_message" :value="true" type="error" dismissible>{{
@@ -18,12 +14,12 @@
         <v-card-title>
           <form @submit.prevent>
             <v-text-field
-              id="email"
-              v-model="email"
-              name="email"
-              type="email"
-              label="E-mail"
-              data-vv-name="email"
+              id="username"
+              v-model="username"
+              name="username"
+              type="text"
+              label="Username"
+              data-vv-name="username"
               required
               solo
               class="rounded-0"
@@ -46,9 +42,19 @@
               >
             </span>
 
-            <v-checkbox v-model="rememberMe" label="Remember me" class="rounded-0" />
+            <v-checkbox
+              v-model="rememberMe"
+              label="Remember me"
+              class="rounded-0"
+            />
 
-            <v-btn color="primary" type="submit" block @click="sendForm" class="rounded-0">
+            <v-btn
+              color="primary"
+              type="submit"
+              block
+              @click="sendForm"
+              class="rounded-0"
+            >
               Login
             </v-btn>
 
@@ -65,60 +71,56 @@
       </v-card>
     </v-flex>
 
-
     <v-flex xs12 lg1 class="filler"></v-flex>
   </v-layout>
 </template>
 
 <script lang="ts">
   import { Component, Vue, Mixins } from 'vue-property-decorator';
-  import HelloWorld from '../components/HelloWorld.vue'
-import userAuthMixin from '@/mixins/userAuthMixin';
-import { mapActions, mapGetters } from 'vuex';
-import { namespace } from 'vuex-class'
-const shared = namespace('shared');
-
+  import HelloWorld from '../components/HelloWorld.vue';
+  import userAuthMixin from '@/mixins/userAuthMixin';
+  import { mapActions, mapGetters } from 'vuex';
+  import { namespace } from 'vuex-class';
+  const shared = namespace('shared');
 
   @Component({
-  components: {
-    HelloWorld,
-  }, 
-  mixins: [userAuthMixin],
-  methods: {
-    ...mapActions(['setLoadingState'])
-  }
-})
-export default class Home extends Mixins(userAuthMixin) {
-  @shared.Getter
-  public LOGIN_STATE!: boolean;
+    components: {
+      HelloWorld,
+    },
+    mixins: [userAuthMixin],
+    methods: {
+      ...mapActions(['setLoadingState']),
+    },
+  })
+  export default class Home extends Mixins(userAuthMixin) {
+    @shared.Getter
+    public LOGIN_STATE!: boolean;
 
-  @shared.Action
-  public saveFooterState!: (newName: boolean) => void;
-  public setLoadingState!: (newName: boolean) => void;
+    @shared.Action
+    public saveFooterState!: (newName: boolean) => void;
+    public setLoadingState!: (newName: boolean) => void;
 
-  public email = '';
-  public password = '';
-  public error_message = '';
-  public rememberMe = false;
+    public username = '';
+    public password = '';
+    public error_message = '';
+    public rememberMe = false;
 
-  public isLoggedIn = true;
+    public isLoggedIn = true;
 
+    beforeCreate(): void {
+      // let localStorageLogin = localStorage.getItem('loggedIn') == "1"
+      // let storeLoginState = this.LOGIN_STATE ? this.LOGIN_STATE : localStorageLogin
+      // if (localStorageLogin) {
+      //   this.$router.push('About')
+      //   this.$router.push({ path: `/about` });
+      // } else {
+      //   this.isLoggedIn = false;
+      // }
+    }
 
-  beforeCreate(): void {
-    // let localStorageLogin = localStorage.getItem('loggedIn') == "1"
-    // let storeLoginState = this.LOGIN_STATE ? this.LOGIN_STATE : localStorageLogin
-
-    // if (localStorageLogin) {
-    //   this.$router.push('About')
-    //   this.$router.push({ path: `/about` });
-    // } else {
-    //   this.isLoggedIn = false;
-    // }
-  }
-
-  public sendForm(): void {
+    public sendForm(): void {
       const userInfo = {
-        email: this.email,
+        username: this.username,
         password: this.password,
         remember_me: this.rememberMe,
       };
@@ -127,28 +129,25 @@ export default class Home extends Mixins(userAuthMixin) {
 
       setTimeout(() => {
         this.login(userInfo).then((result: any) => {
-          console.log('result: ', result);
           if (result) {
             if (result.data.message !== 'Invalid login') {
               localStorage.user_id = result.data.id;
-  
+
               // this.saveFooterState(true);
-              this.$router.push('About')
+              this.$router.push('About');
               this.$router.push({ path: `/about` });
               console.log('sendform: ', this.LOGIN_STATE);
             } else {
               this.error_message = result.data.message;
             }
-
           } else {
-            console.log('nothingfwe')
+            console.log('nothingfwe');
           }
         });
       }, 2000); // simulate waiting for request
     }
-}
+  }
 </script>
-
 
 <style lang="scss">
   form {
@@ -195,7 +194,7 @@ export default class Home extends Mixins(userAuthMixin) {
       text-align: center;
       padding: 150px 0;
       color: #fff;
-      filter: drop-shadow(0 0 8px rgba(0, 0, 0, .7));
+      filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.7));
 
       h1 {
         font-size: 56px;

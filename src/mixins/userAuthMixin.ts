@@ -11,7 +11,7 @@ const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 
 
 export interface userInfo {
-  email: string;
+  username: string;
   password: string;
   remember_me: boolean;
 }
