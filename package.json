@@ -2,13 +2,10 @@
   "name": "sharlayan-dresser-appp",
   "version": "0.1.0",
   "private": true,
-  "apiEndpointDev": "http://localhost:5000",
-  "apiEndpointStage": "https://sharlayan-dresser-api-dev.herokuapp.com/",
-  "apiEndpointProd": "https://sharlayan-dresser-api-prod.herokuapp.com/",
   "scripts": {
     "start": "npm run serve",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --mode production",
     "build:prod": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
