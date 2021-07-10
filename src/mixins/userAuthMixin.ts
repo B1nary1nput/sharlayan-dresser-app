@@ -1,7 +1,7 @@
 
 import Axios from 'axios'
 import Vue from 'vue';
-import { Component } from 'vue-property-decorator'
+import { Component, Watch } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 const shared = namespace('shared');
 import VueRouter, { Route } from 'vue-router'
@@ -10,10 +10,19 @@ const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 
 
 
-export interface userInfo {
+export interface loginUserInfo {
   username: string;
   password: string;
   remember_me: boolean;
+}
+
+export interface signupUserInfo {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  rememberMe: boolean;
 }
 @Component
 export default class userAuthMixin extends Vue {
@@ -23,9 +32,14 @@ export default class userAuthMixin extends Vue {
   @shared.Action
   public saveLoginState!: (newName: boolean) => void
 
+  @Watch('valid')
+  onChildChanged(val: string, oldVal: string) {
+    console.log('sdchange: ', val)
+  }
+
   // Handle the login request, and set their login status. 
   // Mainly used for menu items and display of the logout button
-  public async login(user: userInfo): Promise<void> {
+  public async login(user: loginUserInfo): Promise<void> {
     return await Axios.post(`${apiEndpoint}/login`, user, {
       withCredentials: true,
     }).then((result) => {
@@ -48,9 +62,11 @@ export default class userAuthMixin extends Vue {
 
 
   // Handle the signup request
-  public async signup(user: userInfo): Promise<void> {
-    Axios.post(`${apiEndpoint}/auth/signup`, user, {
+  public async signup(user: signupUserInfo): Promise<void> {
+    return await Axios.post(`${apiEndpoint}/signup`, user, {
       withCredentials: true,
+    }).catch(error => {
+      return error.response;
     })
   }
 
@@ -74,7 +90,6 @@ export default class userAuthMixin extends Vue {
 
   // When the user clicks the logout button, remove all traces of their logged in status
   public async logout(): Promise<void> {
-
     localStorage.removeItem('user_id')
     Axios.get(`${apiEndpoint}/logout`, {
       withCredentials: true,
@@ -82,6 +97,15 @@ export default class userAuthMixin extends Vue {
       this.saveLoginState(false)
       localStorage.removeItem('loggedIn')
       this.$router.push({ path: '/' }) // redirect to login page
+    })
+  }
+
+
+  public async confirmUser(tokenId: string): Promise<void> {
+    return await Axios.post(`${apiEndpoint}/confirmation/${tokenId}`, {
+      withCredentials: true,
+    }).catch(error => {
+      return error.response
     })
   }
 }

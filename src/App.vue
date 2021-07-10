@@ -42,7 +42,7 @@
 
     // lifecycle
     mounted(): void {
-      this.redirectIfNotLoggedIn();
+      // this.redirectIfNotLoggedIn();
     }
 
     // methods
