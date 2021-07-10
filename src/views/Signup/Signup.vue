@@ -27,6 +27,7 @@
               type="text"
               label="Username*"
               :rules="usernameRules"
+              @keyup="onSave"
               required
               filled
               autocomplete="off"
@@ -77,6 +78,7 @@
               label="Password*"
               type="password"
               :rules="passwordRules"
+              @keyup="onSave"
               required
               filled
               class="rounded-0"
