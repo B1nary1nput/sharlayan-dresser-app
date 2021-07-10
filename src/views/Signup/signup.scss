@@ -1,0 +1,105 @@
+@import '../../styles/global';
+
+.signup-page {
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  background-image: url('../../assets/signupbackground.jpg');
+  background-size: cover;
+  justify-content: flex-end;
+  transition: background-position 0.1s ease-in-out;
+
+  @include respond-to('xsmall') {
+    justify-content: center;
+    align-content: flex-start;
+    background-position: 40%;
+  }
+
+  @include respond-to('small') {
+    justify-content: center;
+    align-content: center;
+    background-position: 30%;
+  }
+  @include respond-to('medium') {
+    justify-content: flex-end;
+  }
+
+  > .login-form {
+    width: 100%;
+    position: relative;
+    backdrop-filter: blur(10px);
+
+    @include respond-to('xsmall') {
+      right: 0;
+      margin-bottom: 25px;
+    }
+
+    @include respond-to('small') {
+      right: 0;
+      margin-bottom: 25px;
+    }
+
+    @include respond-to('large') {
+      right: -50px;
+      margin-bottom: 25px;
+    }
+
+    form {
+      width: 100%;
+    }
+
+    .v-sheet {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .signup__link {
+      margin-top: 60px;
+      opacity: 0.6;
+
+      a {
+        text-decoration: none;
+        color: initial;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  > .welcome {
+    min-height: 400px;
+    text-align: center;
+    padding: 150px 0;
+    color: #fff;
+    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.7));
+
+    @include respond-to('xsmall') {
+      min-height: auto;
+      padding: 120px 0;
+    }
+
+    @include respond-to('small') {
+      min-height: auto;
+      padding: 75px 0;
+    }
+
+    h1 {
+      font-size: 56px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+  }
+
+  .filler {
+    @include respond-to('xsmall') {
+      display: none;
+    }
+  }
+
+  .v-sheet.v-card {
+    border-radius: 0 !important;
+  }
+}
