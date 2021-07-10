@@ -2,7 +2,7 @@
   <v-layout row wrap class="confirm-page">
     <v-flex xs12 md7 class="filler"> </v-flex>
 
-    <v-flex xs10 md4 class="login-form rounded-0">
+    <v-flex xs10 md4 class="confirm-form rounded-0">
       <v-alert v-if="error_message" :value="true" type="error" dismissible>{{
         error_message
       }}</v-alert>

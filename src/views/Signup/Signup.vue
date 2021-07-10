@@ -2,7 +2,7 @@
   <v-layout row wrap :class="{ hidden: !isLoggedIn }" class="signup-page">
     <v-flex xs12 md7 class="filler"> </v-flex>
 
-    <v-flex xs10 md4 class="login-form rounded-0">
+    <v-flex xs10 md4 class="signup-form rounded-0">
       <v-alert v-if="error_message" :value="true" type="error" dismissible>{{
         error_message
       }}</v-alert>
