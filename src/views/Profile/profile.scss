@@ -1,0 +1,43 @@
+.profile-page {
+  .v-card {
+    background-size: cover;
+    min-height: 500px;
+    background-position: center;
+    .hover {
+      display: flex;
+      flex-wrap: wrap;
+      opacity: 0;
+      height: 100%;
+      min-height: 500px;
+      width: 100%;
+      padding: 30px;
+      justify-content: center;
+      align-items: center;
+
+      > .text {
+        flex: 1 1 100%;
+        max-width: 100%;
+        text-align: center;
+      }
+
+      > .job-bar {
+        align-self: flex-end;
+
+        img {
+          width: 24px;
+          height: 24px;
+          margin: 0 3px;
+        }
+      }
+    }
+
+    &:hover {
+      .hover {
+        opacity: 1;
+        transition: all 0.2s ease;
+
+        backdrop-filter: blur(6px);
+      }
+    }
+  }
+}

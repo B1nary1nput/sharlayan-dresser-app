@@ -103,7 +103,8 @@
     public setLoadingState!: (newName: boolean) => void;
     public saveLoginState!: (newName: boolean) => void;
 
-    @Action('shared/saveUserId') saveUserId!: (newName: boolean) => void;
+    @shared.Action
+    public saveUserId!: (userId: string) => void;
 
     public loading = false;
     public username = '';
@@ -146,9 +147,8 @@
             localStorage.user_id = result.data.id;
 
             // this.saveFooterState(true);
-            this.$router.push('Upload');
+            this.$router.push('profile');
             // this.$router.push({ path: `/upload` });
-            console.log('sendform: ', this.LOGIN_STATE);
           } else {
             this.error_message = result.data.message;
             localStorage.removeItem('loggedIn');
@@ -158,7 +158,6 @@
           EventBus.$emit('CancelTimeout', true);
           localStorage.removeItem('loggedIn');
           this.saveLoginState(false);
-          console.log('nothingfwe');
         }
 
         this.loading = false;

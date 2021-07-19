@@ -12,175 +12,181 @@
               <h1>Submit your glam</h1>
             </v-card-title>
             <v-card-text>
-              <form @submit.prevent>
-                <v-text-field
-                  id="name"
-                  v-model="glam.name"
-                  name="name"
-                  type="text"
-                  label="Glam Name"
-                  data-vv-name="name"
-                  required
-                  filled
-                  class="rounded-0"
-                />
+              <v-text-field
+                id="name"
+                v-model="glam.name"
+                name="name"
+                type="text"
+                label="Glam Name"
+                data-vv-name="name"
+                required
+                filled
+                class="rounded-0"
+              />
 
-                <v-textarea
-                  id="description"
-                  v-model="glam.description"
-                  name="description"
-                  type="text"
-                  label="Glam Description"
-                  data-vv-name="description"
-                  required
-                  filled
-                  class="rounded-0"
-                />
+              <v-textarea
+                id="description"
+                v-model="glam.description"
+                name="description"
+                type="text"
+                label="Glam Description"
+                data-vv-name="description"
+                required
+                filled
+                class="rounded-0"
+              />
 
-                <v-select
-                  v-model="glam.jobs"
-                  :items="jobs"
-                  label="Jobs"
-                  filled
-                  multiple
-                ></v-select>
+              <v-select
+                v-model="glam.jobs"
+                :items="jobs"
+                label="Jobs"
+                filled
+                multiple
+              ></v-select>
 
-                <v-select
-                  v-model="glam.gender"
-                  :items="genders"
-                  label="Gender"
-                  filled
-                ></v-select>
+              <v-select
+                v-model="glam.gender"
+                :items="genders"
+                label="Gender"
+                filled
+              ></v-select>
 
-                <v-row>
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="computedWeapon"
-                      :labelText="'Weapon'"
-                      :placeholderText="'Search for a weapon'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.SHIELD"
-                      :labelText="'Off-hand'"
-                      :placeholderText="'Search for an off-hand'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
-                </v-row>
+              <v-row>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="computedWeapon"
+                    :labelText="'Weapon'"
+                    :placeholderText="'Search for a weapon'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.SHIELD"
+                    :labelText="'Off-hand'"
+                    :placeholderText="'Search for an off-hand'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
+              </v-row>
 
-                <v-row>
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.HELMET"
-                      :labelText="'Helmet'"
-                      :placeholderText="'Search for a helmet'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
+              <v-row>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.HELMET"
+                    :labelText="'Helmet'"
+                    :placeholderText="'Search for a helmet'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
 
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.EARRING"
-                      :labelText="'Earring'"
-                      :placeholderText="'Search for an earring'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
-                </v-row>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.EARRING"
+                    :labelText="'Earring'"
+                    :placeholderText="'Search for an earring'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
+              </v-row>
 
-                <v-row>
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.CHEST"
-                      :labelText="'Chest'"
-                      :placeholderText="'Search for a chest piece'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.NECKLACE"
-                      :labelText="'Necklace'"
-                      :placeholderText="'Search for a necklace'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
-                </v-row>
+              <v-row>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.CHEST"
+                    :labelText="'Chest'"
+                    :placeholderText="'Search for a chest piece'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.NECKLACE"
+                    :labelText="'Necklace'"
+                    :placeholderText="'Search for a necklace'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
+              </v-row>
 
-                <v-row>
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.HANDS"
-                      :labelText="'Hands'"
-                      :placeholderText="'Search for a pair of gloves'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
+              <v-row>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.HANDS"
+                    :labelText="'Hands'"
+                    :placeholderText="'Search for a pair of gloves'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
 
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.BRACELET"
-                      :labelText="'Bracelet'"
-                      :placeholderText="'Search for a bracelet'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
-                </v-row>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.BRACELET"
+                    :labelText="'Bracelet'"
+                    :placeholderText="'Search for a bracelet'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
+              </v-row>
 
-                <v-row>
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.LEGS"
-                      :labelText="'Legs'"
-                      :placeholderText="'Search for a pair of pants'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
+              <v-row>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.LEGS"
+                    :labelText="'Legs'"
+                    :placeholderText="'Search for a pair of pants'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
 
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.RING"
-                      :labelText="'Left ring'"
-                      :placeholderText="'Search for a ring'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
-                </v-row>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.RING"
+                    :labelText="'Left ring'"
+                    :placeholderText="'Search for a ring'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
+              </v-row>
 
-                <v-row>
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.BOOTS"
-                      :labelText="'Boots'"
-                      :placeholderText="'Search for a pair of boots'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
-                  <v-col xs="12" sm="6">
-                    <item-search-input
-                      :equipmentSlot="equipmentSlots.RING"
-                      :labelText="'Right ring'"
-                      :placeholderText="'Search for a ring'"
-                      @item-select="updateGlamModel"
-                    ></item-search-input>
-                  </v-col>
-                </v-row>
+              <v-row>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.BOOTS"
+                    :labelText="'Boots'"
+                    :placeholderText="'Search for a pair of boots'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
+                <v-col xs="12" sm="6">
+                  <item-search-input
+                    :equipmentSlot="equipmentSlots.RING"
+                    :labelText="'Right ring'"
+                    :placeholderText="'Search for a ring'"
+                    @item-select="updateGlamModel"
+                  ></item-search-input>
+                </v-col>
+              </v-row>
 
-                <button @click="printObject(glam)">Hello</button>
+              <v-file-input
+                truncate-length="50"
+                @change="onSelect($event)"
+                multiple
+                ref="imageUpload"
+                name="multi-files"
+              ></v-file-input>
 
-                <loading-button
-                  :color="'primary'"
-                  :type="'submit'"
-                  :buttonText="'SUBMIT'"
-                  :show="loading"
-                  :disableButton="loading"
-                  :waitingMessage="'Waking up server. Please hang on'"
-                  @click.native="printObject(glam)"
-                ></loading-button>
-              </form>
+              <button @click="printObject(glam)">Hello</button>
+
+              <loading-button
+                :color="'primary'"
+                :type="'submit'"
+                :buttonText="'SUBMIT'"
+                :show="loading"
+                :disableButton="loading"
+                :waitingMessage="'Waking up server. Please hang on'"
+                @click.native="printObject(glam)"
+              ></loading-button>
             </v-card-text>
           </v-card>
         </v-col>
@@ -190,7 +196,7 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Mixins, Watch } from 'vue-property-decorator';
+  import { Component, Vue, Mixins, Watch, Ref } from 'vue-property-decorator';
   import Axios from 'axios';
   import ItemSearchInput, {
     equipmentSlots,
@@ -200,6 +206,8 @@
   import { namespace } from 'vuex-class';
   import userAuthMixin from '@/mixins/userAuthMixin';
   const shared = namespace('shared');
+
+  const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 
   @Component({
     components: { ItemSearchInput, LoadingButton },
@@ -211,6 +219,8 @@
     @shared.Getter
     public USER_ID!: string;
 
+    @Ref('imageUpload') readonly imageUpload!: HTMLInputElement;
+
     public states: [] = [];
     public items: [] = [];
     public loading = false;
@@ -218,6 +228,9 @@
     public select = null;
     public _timerId: any;
     public equipmentSlots = equipmentSlots;
+
+    public formData = new FormData();
+    public file: any;
 
     public glam = {
       user_id: this.USER_ID,
@@ -305,32 +318,68 @@
       if (!val) {
         return;
       }
-
-      console.log('val: ', val);
     }
 
     created(): void {
       this.redirectIfNotLoggedIn();
-      console.log('this.USER_ID: ', this.USER_ID);
       this.glam.user_id = this.USER_ID;
     }
 
-    public printObject(glam: any): void {
-      console.log('glam: ', this.glam);
-      Axios.post(`http://localhost:3000/${this.USER_ID}/glams`, glam, {
-        withCredentials: true,
-      })
-        .then((res) => {
-          console.log('result: ', res);
-        })
-        .catch((err) => {
-          console.error('Err: ', err);
-        });
+    public onSelect(event: any): void {
+      const files = event;
+
+      files.forEach((file: any, index: number) => {
+        this.formData.append('multi-files', file);
+      });
+    }
+
+    public async printObject(glam: any): Promise<void> {
+      console.log('userid: ', this.USER_ID);
+
+      try {
+        // send the images and return the image paths after upload
+        await Axios.post(
+          `${apiEndpoint}/userGlamScreenshot/${this.USER_ID}`,
+          this.formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Accept: '*/*',
+            },
+            withCredentials: true,
+          }
+        )
+          .then((res) => {
+            console.log('res: ', res);
+            // set the screenshot arrays
+            this.glam.screenshots = res.data.files;
+
+            // post the glam after the screenshots have been updated
+
+            Axios.post(`${apiEndpoint}/userGlamPost/${this.USER_ID}`, glam, {
+              withCredentials: true,
+            })
+              .then((res) => {
+                console.log('result: ', res);
+              })
+              .catch((err) => {
+                console.error('Err: ', err);
+              });
+          })
+          .catch((err) => {
+            console.log('axios error: ', err);
+          });
+      } catch (err) {
+        console.error('try/catch error: ', err);
+      }
     }
 
     public updateGlamModel(equipmentSlot: any, payload: any): void {
       switch (equipmentSlot) {
         case 13:
+          this.glam.items.weapon = payload;
+          break;
+        case 1:
           this.glam.items.weapon = payload;
           break;
         case 2:
@@ -373,9 +422,7 @@
       Axios.get(
         `https://xivapi.com/search?pretty=1&indexes=item&columns=ID,Icon,Name,LevelItem,ItemKind.Name,EquipSlotCategory.ID&string=${this.search}&filters=EquipSlotCategory.ID=5`
       ).then((res) => {
-        console.log('result: ', res.data.Results);
         this.items = res.data.Results;
-        console.log('this.items: ', this.items);
       });
     }
 
