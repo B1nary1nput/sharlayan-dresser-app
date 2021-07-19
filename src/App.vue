@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app dark>
     <v-app-bar app color="primary" dark v-if="loggedIn">
       <v-spacer></v-spacer>
       <v-btn depressed color="primary"
@@ -41,7 +41,8 @@
     }
 
     // lifecycle
-    mounted(): void {
+    created(): void {
+      this.$vuetify.theme.dark = true;
       // this.redirectIfNotLoggedIn();
     }
 

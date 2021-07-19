@@ -84,16 +84,15 @@
               class="rounded-0"
             />
 
-            <v-btn
-              :disabled="!valid"
-              color="primary"
-              type="submit"
-              block
-              @click="sendForm()"
-              class="rounded-0"
-            >
-              Signup
-            </v-btn>
+            <loading-button
+              :color="'primary'"
+              :type="'submit'"
+              :buttonText="'Login'"
+              :show="loading"
+              :disableButton="loading || !valid"
+              :waitingMessage="'Waking up server. Please hang on'"
+              @click.native="sendForm()"
+            ></loading-button>
           </form>
 
           <div :class="{ hidden: !signupComplete }">
@@ -134,16 +133,22 @@
 </template>
 
 <script lang="ts">
+  import EventBus from '@/EventBus';
   import { Component, Vue, Mixins, Ref } from 'vue-property-decorator';
   import { VForm } from '@/types/VForm';
   import { VInput } from '@/types/VInput';
   import userAuthMixin from '@/mixins/userAuthMixin';
   import { mapActions, mapGetters } from 'vuex';
+  import LoadingButton from '@/components/LoadingButton/LoadingButton.vue';
 
   import { namespace, Action } from 'vuex-class';
   const shared = namespace('shared');
 
-  @Component
+  @Component({
+    components: {
+      LoadingButton,
+    },
+  })
   export default class Signup extends Mixins(userAuthMixin) {
     @shared.Getter
     public LOGIN_STATE!: boolean;
@@ -158,6 +163,7 @@
     @Ref('passwordInput') readonly passwordInput!: VInput;
 
     // variables
+    public loading = false;
     public valid = false;
     public username = '';
     public email = '';
@@ -192,6 +198,7 @@
     }
 
     public sendForm(): void {
+      this.loading = true;
       const userInfo = {
         username: this.username,
         email: this.email,
@@ -203,22 +210,24 @@
 
       this.setLoadingState(true);
 
-      setTimeout(() => {
-        this.signup(userInfo).then((result: any) => {
+      this.signup(userInfo)
+        .then((result: any) => {
           if (result) {
+            console.log('result: ', result);
             if (result.status !== 500) {
               this.signupComplete = true;
             } else {
               this.error_message = result.data.message;
             }
-          } else {
-            this.signupComplete = true;
           }
+          this.loading = false;
+        })
+        .catch((error) => {
+          console.log('Error: ', error);
         });
-      }, 2000); // simulate waiting for request
     }
 
-    public loginNavigation() {
+    public loginNavigation(): void {
       this.$router.push('/login');
     }
   }

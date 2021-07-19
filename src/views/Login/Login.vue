@@ -48,15 +48,15 @@
               class="rounded-0"
             />
 
-            <v-btn
-              color="primary"
-              type="submit"
-              block
-              @click="sendForm"
-              class="rounded-0"
-            >
-              Login
-            </v-btn>
+            <loading-button
+              :color="'primary'"
+              :type="'submit'"
+              :buttonText="'Login'"
+              :show="loading"
+              :disableButton="loading"
+              :waitingMessage="'Waking up server. Please hang on'"
+              @click.native="sendForm()"
+            ></loading-button>
 
             <div class="signup__link text-xs-center">
               <p>
@@ -76,16 +76,18 @@
 </template>
 
 <script lang="ts">
+  import EventBus from '@/EventBus';
   import { Component, Vue, Mixins } from 'vue-property-decorator';
-  import HelloWorld from '../../components/HelloWorld.vue';
   import userAuthMixin from '@/mixins/userAuthMixin';
   import { mapActions, mapGetters } from 'vuex';
-  import { namespace } from 'vuex-class';
+  import { namespace, Action } from 'vuex-class';
   const shared = namespace('shared');
+
+  import LoadingButton from '@/components/LoadingButton/LoadingButton.vue';
 
   @Component({
     components: {
-      HelloWorld,
+      LoadingButton,
     },
     mixins: [userAuthMixin],
     methods: {
@@ -99,7 +101,11 @@
     @shared.Action
     public saveFooterState!: (newName: boolean) => void;
     public setLoadingState!: (newName: boolean) => void;
+    public saveLoginState!: (newName: boolean) => void;
 
+    @Action('shared/saveUserId') saveUserId!: (newName: boolean) => void;
+
+    public loading = false;
     public username = '';
     public password = '';
     public error_message = '';
@@ -119,6 +125,8 @@
     }
 
     public sendForm(): void {
+      this.loading = true;
+
       const userInfo = {
         username: this.username,
         password: this.password,
@@ -127,24 +135,34 @@
 
       this.setLoadingState(true);
 
-      setTimeout(() => {
-        this.login(userInfo).then((result: any) => {
-          if (result) {
-            if (result.data.message !== 'Invalid login') {
-              localStorage.user_id = result.data.id;
+      EventBus.$emit('LoginEvent', true); // send event to the child component
 
-              // this.saveFooterState(true);
-              this.$router.push('About');
-              this.$router.push({ path: `/about` });
-              console.log('sendform: ', this.LOGIN_STATE);
-            } else {
-              this.error_message = result.data.message;
-            }
+      this.login(userInfo).then((result: any) => {
+        if (result) {
+          if (result.data.message !== 'Invalid login') {
+            this.saveLoginState(true); // save the state
+            localStorage.setItem('loggedIn', '1');
+            this.saveUserId(result.data.id);
+            localStorage.user_id = result.data.id;
+
+            // this.saveFooterState(true);
+            this.$router.push('Upload');
+            // this.$router.push({ path: `/upload` });
+            console.log('sendform: ', this.LOGIN_STATE);
           } else {
-            console.log('nothingfwe');
+            this.error_message = result.data.message;
+            localStorage.removeItem('loggedIn');
+            this.saveLoginState(false);
           }
-        });
-      }, 2000); // simulate waiting for request
+        } else {
+          EventBus.$emit('CancelTimeout', true);
+          localStorage.removeItem('loggedIn');
+          this.saveLoginState(false);
+          console.log('nothingfwe');
+        }
+
+        this.loading = false;
+      });
     }
   }
 </script>

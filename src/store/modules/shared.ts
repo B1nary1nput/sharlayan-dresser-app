@@ -10,7 +10,8 @@ const sharedModule: Module<any, any> = {
     drawer: true,
     loggedIn: false,
     footerState: true,
-    toolbar: false
+    toolbar: false,
+    userId: ''
   },
 
   // Mutations set/change the state, should ideally need actions to run
@@ -29,6 +30,10 @@ const sharedModule: Module<any, any> = {
 
     setToolbarState(state, visibility) {
       state.toolbarState = visibility
+    },
+
+    setUserIdState(state, userIdState) {
+      state.userId = userIdState;
     }
   },
 
@@ -39,6 +44,12 @@ const sharedModule: Module<any, any> = {
       commit,
     }, drawerState) {
       commit('setDrawer', drawerState)
+    },
+
+    saveUserId({
+      commit,
+    }, userIdState) {
+      commit('setUserIdState', userIdState)
     },
 
     saveLoginState({
@@ -77,6 +88,8 @@ const sharedModule: Module<any, any> = {
     TOOLBAR_STATE: state => state.toolbar,
 
     FOOTER_STATE: state => state.footerState,
+
+    USER_ID: state => state.userId
   },
 }
 

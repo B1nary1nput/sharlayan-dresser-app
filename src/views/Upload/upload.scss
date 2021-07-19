@@ -1,0 +1,10 @@
+.upload {
+  .v-card {
+    padding: 30px;
+    margin-bottom: 30px;
+
+    &__text {
+      padding: 16px 0; // override the default padding
+    }
+  }
+}

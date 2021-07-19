@@ -2,7 +2,7 @@
 import Axios from 'axios'
 import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator'
-import { namespace } from 'vuex-class'
+import { Action, namespace } from 'vuex-class'
 const shared = namespace('shared');
 import VueRouter, { Route } from 'vue-router'
 
@@ -30,28 +30,29 @@ export default class userAuthMixin extends Vue {
   public LOGIN_STATE!: boolean;
 
   @shared.Action
-  public saveLoginState!: (newName: boolean) => void
+  public saveLoginState!: (newName: boolean) => void;
 
-  @Watch('valid')
-  onChildChanged(val: string, oldVal: string) {
-    console.log('sdchange: ', val)
-  }
+  @shared.Action
+  public saveUserId!: (userId: string) => void;
+
 
   // Handle the login request, and set their login status. 
   // Mainly used for menu items and display of the logout button
-  public async login(user: loginUserInfo): Promise<void> {
-    return await Axios.post(`${apiEndpoint}/login`, user, {
+  public login(user: loginUserInfo): Promise<void> {
+    return Axios.post(`${apiEndpoint}/login`, user, {
       withCredentials: true,
-    }).then((result) => {
-      console.log('result:wefwe ', result)
-      this.saveLoginState(true) // save the state
-      localStorage.setItem('loggedIn', "1")
-      return result
-    }).catch((error) => {
-      localStorage.removeItem('loggedIn')
-      this.saveLoginState(false)
-      return error.response
     })
+    // .then((result) => {
+    //   console.log('result:wefwe ', result)
+    //   this.saveLoginState(true) // save the state
+    //   this.saveUserId(result.data.id);
+    //   localStorage.setItem('loggedIn', "1")
+    //   // return result
+    // }).catch((error) => {
+    //   localStorage.removeItem('loggedIn')
+    //   this.saveLoginState(false)
+    //   // return error.response
+    // });
 
     // Axios.get(`${apiEndpoint}`).then((result) => {
     //   console.log('result: ', result);
@@ -74,8 +75,12 @@ export default class userAuthMixin extends Vue {
   // If the user is not logged in, they shouldn't be able to see the encounters page
   // even if the page is going to be blank, because of a 'null' user
   public redirectIfNotLoggedIn(): void {
+    const userId: any = localStorage.getItem('user_id');
+
     if (localStorage.getItem('loggedIn') == "1") {
+      console.log('wah')
       this.saveLoginState(true);
+      this.saveUserId(userId);
       return;
     }
 
@@ -84,7 +89,7 @@ export default class userAuthMixin extends Vue {
       localStorage.removeItem('loggedIn')
       localStorage.removeItem('user_id')
       this.saveLoginState(false)
-      this.$router.push({ path: '/' }).catch((err) => { console.error("🤷‍♂️") })
+      // this.$router.push({ path: '/' }).catch((err) => { console.error("🤷‍♂️") })
     }
   }
 
