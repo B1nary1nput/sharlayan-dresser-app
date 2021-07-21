@@ -1,0 +1,70 @@
+@import '@/styles/global';
+
+.container {
+  padding: 0;
+}
+
+.view-glam {
+  margin-bottom: 12px;
+
+  .v-carousel {
+    height: 1080px !important;
+    &__item {
+      height: 1080px !important;
+    }
+
+    @include respond-to('xsmall') {
+      height: 400px !important;
+
+      &__item {
+        height: 400px !important;
+      }
+    }
+  }
+
+  .glam {
+    position: relative;
+  }
+
+  .v-card {
+    top: -210px;
+    margin-bottom: -250px;
+
+    @include respond-to('xsmall') {
+      top: 0px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 15px;
+    }
+
+    .job-bar {
+      align-self: flex-end;
+      text-align: right;
+
+      img {
+        width: 24px;
+        height: 24px;
+        margin: 0 3px;
+      }
+    }
+
+    .items {
+      margin-top: 15px;
+      .col {
+        display: flex;
+      }
+
+      img {
+        height: 51px;
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
+.theme--dark.v-application {
+  background-image: url('../../assets/pattern.png');
+  background-size: 100%;
+}

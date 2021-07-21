@@ -64,9 +64,7 @@ export default class userAuthMixin extends Vue {
 
   // Handle the signup request
   public async signup(user: signupUserInfo): Promise<void> {
-    return await Axios.post(`${apiEndpoint}/signup`, user, {
-      withCredentials: true,
-    }).catch(error => {
+    return await Axios.post(`${apiEndpoint}/signup`, user).catch(error => {
       return error.response;
     })
   }

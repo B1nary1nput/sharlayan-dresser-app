@@ -1,19 +1,22 @@
 <template>
   <div class="profile-page">
+    <page-loading :loading="loading"></page-loading>
+
     <v-container fluid>
       <v-row>
         <v-col xs="12">
-          <h1>Your profile</h1>
+          <h1>Your dresser</h1>
         </v-col>
       </v-row>
 
       <v-row v-if="!loading">
         <v-col xs="12" md="3" v-for="(glam, index) in glams" :key="index">
           <v-card
+            @click="viewGlam(glam)"
             :style="{
               backgroundImage:
                 glam.screenshots.length >= 1
-                  ? `url(http://localhost:3000/${glam.screenshots[0].destination}/${glam.screenshots[0].filename})`
+                  ? `url(${apiEndpoint}/${glam.screenshots[0].destination}/${glam.screenshots[0].filename})`
                   : '',
             }"
           >
@@ -36,45 +39,6 @@
                 </span>
               </div>
             </div>
-            <!-- <v-card-title> {{ glam.name }} {{ index }} </v-card-title> -->
-
-            <!-- <v-card-text> -->
-            <!-- {{ glam.screenshots.length }}
-              <img
-                v-if="glam.screenshots.length >= 1"
-                :src="`http://localhost:3000/${glam.screenshots[index].path}`"
-                alt=""
-              /> -->
-            <!-- <span v-if="glam.items.weapon">
-                Weapon: {{ glam.items.weapon.Name }}
-              </span> -->
-            <!-- <br />
-              <div v-if="glam.items">
-                <span v-if="glam.items.shield">
-                  Off-Hand: {{ glam.items.shield.Name }}
-                </span>
-                <br />
-                <span v-if="glam.items.helmet">
-                  Helmet: {{ glam.items.helmet.Name }}
-                </span>
-                <br />
-                <span v-if="glam.items.chest">
-                  Chest: {{ glam.items.chest.Name }}
-                </span>
-                <br />
-                <span v-if="glam.items.hands">
-                  Hands: {{ glam.items.weapon.Name }}
-                </span>
-                <br />
-                <span v-if="glam.items.legs">
-                  Legs: {{ glam.items.legs.Name }}
-                </span>
-                <br />
-                <span v-if="glam.items.feet">
-                  Feet: {{ glam.items.feet.Name }}
-                </span>
-              </div>
-            </v-card-text> -->
           </v-card>
         </v-col>
       </v-row>
@@ -83,21 +47,20 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Mixins, Watch } from 'vue-property-decorator';
+  import { Component, Mixins } from 'vue-property-decorator';
   import Axios from 'axios';
-  import ItemSearchInput, {
-    equipmentSlots,
-  } from '@/components/ItemSearchInput/ItemSearchInput.vue';
+  import ItemSearchInput from '@/components/ItemSearchInput/ItemSearchInput.vue';
   import LoadingButton from '@/components/LoadingButton/LoadingButton.vue';
-  import EventBus from '@/EventBus';
+  import PageLoading from '@/components/PageLoading/PageLoading.vue';
   import { namespace } from 'vuex-class';
   import userAuthMixin from '@/mixins/userAuthMixin';
+  import { IGlam } from '@/interface/glam';
   const shared = namespace('shared');
 
   const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 
   @Component({
-    components: { ItemSearchInput, LoadingButton },
+    components: { ItemSearchInput, LoadingButton, PageLoading },
   })
   export default class Upload extends Mixins(userAuthMixin) {
     @shared.Getter
@@ -109,6 +72,7 @@
     public glams: [] = [];
     public loading = true;
     public _timerId: any;
+    public apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 
     // lifecycle
     created(): void {
@@ -118,24 +82,21 @@
     mounted(): void {
       Axios.get(`${apiEndpoint}/userGlamsGet/${this.USER_ID}`, {
         withCredentials: true,
-      }).then((res) => {
-        console.log('profile result: ', res);
-        this.glams = res.data.glams;
-        this.loading = false;
-      });
+      })
+        .then((res) => {
+          this.glams = res.data.glams;
+        })
+        .catch((err) => {
+          console.error('Error: ', err);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     }
 
     // methods
-    public printObject(glam: any): void {
-      Axios.post(`http://localhost:3000/${this.USER_ID}/glams`, glam, {
-        withCredentials: true,
-      })
-        .then((res) => {
-          console.log('result: ', res);
-        })
-        .catch((err) => {
-          console.error('Err: ', err);
-        });
+    public viewGlam(glam: IGlam): void {
+      this.$router.push({ path: `/view-glam/${glam._id}` });
     }
 
     public generateJobIcon(job: string): string {

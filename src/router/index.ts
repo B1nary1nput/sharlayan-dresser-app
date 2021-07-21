@@ -33,16 +33,22 @@ const routes: Array<RouteConfig> = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Upload/Upload.vue')
-    {
-    path: '/profile',
+    component: () => import(/* webpackChunkName: "upload" */ '../views/Upload/Upload.vue')
+  }, {
+    path: '/glams',
     name: 'profile',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Profile/Profile.vue')
+    component: () => import(/* webpackChunkName: "profile" */ '../views/Profile/Profile.vue')
+  }, {
+    path: '/view-glam/:id',
+    name: 'view-glam',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "viewGlam" */ '../views/ViewGlam/ViewGlam.vue')
   }
-  },
 ]
 
 const router = new VueRouter({

@@ -196,15 +196,15 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Mixins, Watch, Ref } from 'vue-property-decorator';
+  import { Component, Mixins, Watch, Ref } from 'vue-property-decorator';
   import Axios from 'axios';
   import ItemSearchInput, {
     equipmentSlots,
   } from '@/components/ItemSearchInput/ItemSearchInput.vue';
   import LoadingButton from '@/components/LoadingButton/LoadingButton.vue';
-  import EventBus from '@/EventBus';
   import { namespace } from 'vuex-class';
   import userAuthMixin from '@/mixins/userAuthMixin';
+  import { IGlam } from '@/interface/glam';
   const shared = namespace('shared');
 
   const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
@@ -291,7 +291,7 @@
 
     public genders = ['Male', 'Female', 'Unisex'];
 
-    get computedWeapon() {
+    get computedWeapon(): number {
       if (
         this.glam.jobs.length == 1 &&
         this.glam.jobs.find((item) => item == 'Paladin')
@@ -305,7 +305,7 @@
     }
 
     @Watch('search')
-    onChildChanged(val: string, oldVal: string) {
+    onChildChanged(val: string): void {
       if (!val) {
         return;
       }
@@ -314,7 +314,7 @@
     }
 
     @Watch('select')
-    onChildChangedTwo(val: string, oldVal: string) {
+    onChildChangedTwo(val: string): void {
       if (!val) {
         return;
       }
@@ -328,14 +328,12 @@
     public onSelect(event: any): void {
       const files = event;
 
-      files.forEach((file: any, index: number) => {
+      files.forEach((file: any) => {
         this.formData.append('multi-files', file);
       });
     }
 
-    public async printObject(glam: any): Promise<void> {
-      console.log('userid: ', this.USER_ID);
-
+    public async printObject(glam: IGlam): Promise<void> {
       try {
         // send the images and return the image paths after upload
         await Axios.post(
@@ -368,13 +366,16 @@
           })
           .catch((err) => {
             console.log('axios error: ', err);
+          })
+          .finally(() => {
+            this.$router.push({ path: '/glams' });
           });
       } catch (err) {
         console.error('try/catch error: ', err);
       }
     }
 
-    public updateGlamModel(equipmentSlot: any, payload: any): void {
+    public updateGlamModel(equipmentSlot: string, payload: any): void {
       switch (equipmentSlot) {
         case 13:
           this.glam.items.weapon = payload;
