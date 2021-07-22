@@ -2,10 +2,6 @@
   <v-app dark>
     <v-app-bar app color="test" v-if="loggedIn">
       <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-      <v-spacer></v-spacer>
-      <v-btn depressed dark color="primary">
-        <v-icon @click="logout()">{{ logoutIcon }}</v-icon>
-      </v-btn>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" absolute temporary>
@@ -23,6 +19,21 @@
               <v-icon>backup</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Upload glam</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item :to="'/settings'">
+            <v-list-item-icon>
+              <v-icon>settings</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Settings</v-list-item-title>
+          </v-list-item>
+
+          <v-spacer></v-spacer>
+          <v-list-item @click="logout()">
+            <v-list-item-icon>
+              <v-icon>{{ logoutIcon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Logout</v-list-item-title>
           </v-list-item>
         </v-list-item-group>
       </v-list>
@@ -56,9 +67,7 @@
     // computed
     get loggedIn(): boolean {
       let localStorageLogin = localStorage.getItem('loggedIn') == '1';
-      let storeLoginState = this.LOGIN_STATE
-        ? this.LOGIN_STATE
-        : localStorageLogin;
+      let storeLoginState = this.LOGIN_STATE ? this.LOGIN_STATE : localStorageLogin;
       return storeLoginState;
     }
 
@@ -73,7 +82,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import './styles/global';
 
   [v-cloak] {
@@ -82,5 +91,10 @@
   [hidden],
   .hidden {
     display: none !important;
+  }
+
+  .theme--dark.v-application {
+    background-image: url('./assets/pattern.png') !important;
+    background-position-y: 50% !important;
   }
 </style>

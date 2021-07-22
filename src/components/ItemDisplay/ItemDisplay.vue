@@ -37,9 +37,6 @@
     public apiEndpoint = apiEndpoint;
 
     // lifecycle
-    mounted(): void {
-      console.log('glamObkect: ', this.glamObject);
-    }
 
     // methods
   }

@@ -11,7 +11,11 @@ const sharedModule: Module<any, any> = {
     loggedIn: false,
     footerState: true,
     toolbar: false,
-    userId: ''
+    userId: '',
+    userInfo: {
+      username: '',
+      userId: ''
+    }
   },
 
   // Mutations set/change the state, should ideally need actions to run
@@ -34,6 +38,10 @@ const sharedModule: Module<any, any> = {
 
     setUserIdState(state, userIdState) {
       state.userId = userIdState;
+    },
+
+    setUserInfoState(state, userInfoState) {
+      state.userInfo = userInfoState;
     }
   },
 
@@ -76,6 +84,12 @@ const sharedModule: Module<any, any> = {
     }, visibility) {
       commit('setFooterState', visibility)
     },
+
+    saveUserInfoState({
+      commit,
+    }, userInfoState) {
+      commit('setUserInfoState', userInfoState);
+    },
   },
 
   // Used in the frontend to display the data
@@ -89,7 +103,9 @@ const sharedModule: Module<any, any> = {
 
     FOOTER_STATE: state => state.footerState,
 
-    USER_ID: state => state.userId
+    USER_ID: state => state.userId,
+
+    USER_INFO: state => state.userInfo
   },
 }
 

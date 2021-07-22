@@ -4,20 +4,17 @@
 
     <v-container fluid>
       <v-row>
-        <v-col xs="12">
+        <v-col cols="12" xs="12">
           <h1>Your dresser</h1>
         </v-col>
       </v-row>
 
       <v-row v-if="!loading">
-        <v-col xs="12" md="3" v-for="(glam, index) in glams" :key="index">
+        <v-col cols="12" xs="12" md="3" v-for="(glam, index) in glams" :key="index">
           <v-card
             @click="viewGlam(glam)"
             :style="{
-              backgroundImage:
-                glam.screenshots.length >= 1
-                  ? `url(${apiEndpoint}/${glam.screenshots[0].destination}/${glam.screenshots[0].filename})`
-                  : '',
+              backgroundImage: glam.screenshots && glam.screenshots.length >= 1 ? `url(${apiEndpoint}/${glam.screenshots[0].destination}/${glam.screenshots[0].filename})` : '',
             }"
           >
             <div class="hover">
@@ -29,19 +26,19 @@
               <div class="job-bar" v-if="glam.jobs">
                 <p v-if="glam.jobs.length >= 1">Works with:</p>
                 <span v-for="(job, index) in glam.jobs" :key="index">
-                  <img
-                    :src="
-                      require(`../../assets/icons/jobs/${generateJobIcon(job)}`)
-                    "
-                    :alt="`Icon for ${job}`"
-                    :title="job"
-                  />
+                  <img :src="require(`../../assets/icons/jobs/${generateJobIcon(job)}`)" :alt="`Icon for ${job}`" :title="job" />
                 </span>
               </div>
             </div>
           </v-card>
         </v-col>
       </v-row>
+
+      <v-btn class="upload-button mx-2" fab dark large color="primary" :to="'/upload'">
+        <v-icon dark>
+          backup
+        </v-icon>
+      </v-btn>
     </v-container>
   </div>
 </template>

@@ -13,7 +13,7 @@ const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 export interface loginUserInfo {
   username: string;
   password: string;
-  remember_me: boolean;
+  rememberMe: boolean;
 }
 
 export interface signupUserInfo {
@@ -23,6 +23,11 @@ export interface signupUserInfo {
   lastName: string;
   password: string;
   rememberMe: boolean;
+}
+
+export interface passwordInfo {
+  newPassword: string;
+  oldPassword: string;
 }
 @Component
 export default class userAuthMixin extends Vue {
@@ -35,30 +40,17 @@ export default class userAuthMixin extends Vue {
   @shared.Action
   public saveUserId!: (userId: string) => void;
 
+  @shared.Action
+  public saveUserInfoState!: (userInfo: { userId: string, username: string }) => void;
+
 
   // Handle the login request, and set their login status. 
   // Mainly used for menu items and display of the logout button
   public login(user: loginUserInfo): Promise<void> {
+    console.log('user: ', user);
     return Axios.post(`${apiEndpoint}/login`, user, {
       withCredentials: true,
     })
-    // .then((result) => {
-    //   console.log('result:wefwe ', result)
-    //   this.saveLoginState(true) // save the state
-    //   this.saveUserId(result.data.id);
-    //   localStorage.setItem('loggedIn', "1")
-    //   // return result
-    // }).catch((error) => {
-    //   localStorage.removeItem('loggedIn')
-    //   this.saveLoginState(false)
-    //   // return error.response
-    // });
-
-    // Axios.get(`${apiEndpoint}`).then((result) => {
-    //   console.log('result: ', result);
-    // }).catch((error) => {
-    //   console.error('Error: ', error);
-    // })
   }
 
 
@@ -70,15 +62,30 @@ export default class userAuthMixin extends Vue {
   }
 
 
+  // Update password
+  public async updatePassword(passwords: passwordInfo): Promise<void> {
+    return await Axios.put(`${apiEndpoint}/update-password`, passwords, {
+      withCredentials: true
+    }).catch(err => {
+      return err.response;
+    })
+  }
+
+
   // If the user is not logged in, they shouldn't be able to see the encounters page
   // even if the page is going to be blank, because of a 'null' user
   public redirectIfNotLoggedIn(): void {
-    const userId: any = localStorage.getItem('user_id');
+    const localUserId: string = this.getCookie('user_id_app');
+    const localUsername: string = this.getCookie('username_app');
 
     if (localStorage.getItem('loggedIn') == "1") {
-      console.log('wah')
       this.saveLoginState(true);
-      this.saveUserId(userId);
+      this.saveUserId(localUserId);
+
+      this.saveUserInfoState({
+        userId: localUserId,
+        username: localUsername
+      })
       return;
     }
 
@@ -110,5 +117,9 @@ export default class userAuthMixin extends Vue {
     }).catch(error => {
       return error.response
     })
+  }
+
+  public getCookie(cookieName: string): string {
+    return document.cookie.match('(^|;)\\s*' + cookieName + '\\s*=\\s*([^;]+)')?.pop() || ''
   }
 }

@@ -1,22 +1,23 @@
 @import '@/styles/global';
 
-.container {
-  padding: 0;
-}
-
 .view-glam {
   margin-bottom: 12px;
 
-  .v-carousel {
+  .container {
+    padding: 0;
+  }
+
+  .v-carousel::v-deep {
     height: 1080px !important;
-    &__item {
+
+    .v-carousel__item {
       height: 1080px !important;
     }
 
     @include respond-to('xsmall') {
       height: 400px !important;
 
-      &__item {
+      .v-carousel__item {
         height: 400px !important;
       }
     }
@@ -29,6 +30,11 @@
   .v-card {
     top: -210px;
     margin-bottom: -250px;
+
+    &.no-carousel {
+      top: 100px !important;
+      margin-bottom: 100px !important;
+    }
 
     @include respond-to('xsmall') {
       top: 0px;
@@ -64,7 +70,6 @@
   }
 }
 
-.theme--dark.v-application {
-  background-image: url('../../assets/pattern.png');
-  background-size: 100%;
+.delete-button {
+  text-align: right;
 }

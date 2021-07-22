@@ -7,46 +7,18 @@
     </v-flex>
 
     <v-flex xs10 md4 class="login-form rounded-0">
-      <v-alert v-if="error_message" :value="true" type="error" dismissible>{{
-        error_message
-      }}</v-alert>
+      <v-alert v-if="error_message" :value="true" type="error" dismissible>{{ error_message }}</v-alert>
       <v-card>
         <v-card-title>
           <form @submit.prevent>
-            <v-text-field
-              id="username"
-              v-model="username"
-              name="username"
-              type="text"
-              label="Username"
-              data-vv-name="username"
-              required
-              solo
-              class="rounded-0"
-            />
+            <v-text-field id="username" v-model="username" name="username" type="text" label="Username" data-vv-name="username" required solo class="rounded-0" />
 
-            <v-text-field
-              id="password"
-              v-model="password"
-              name="password"
-              label="Password"
-              type="password"
-              data-vv-name="password"
-              required
-              solo
-              class="rounded-0"
-            />
+            <v-text-field id="password" v-model="password" name="password" label="Password" type="password" data-vv-name="password" required solo class="rounded-0" />
             <span v-if="error_message" style="float:right;">
-              <router-link :to="'/forgot-password'"
-                >Forgot password?</router-link
-              >
+              <router-link :to="'/forgot-password'">Forgot password?</router-link>
             </span>
 
-            <v-checkbox
-              v-model="rememberMe"
-              label="Remember me"
-              class="rounded-0"
-            />
+            <v-checkbox v-model="rememberMe" label="Remember me" class="rounded-0" />
 
             <loading-button
               :color="'primary'"
@@ -79,6 +51,7 @@
   import EventBus from '@/EventBus';
   import { Component, Vue, Mixins } from 'vue-property-decorator';
   import userAuthMixin from '@/mixins/userAuthMixin';
+  import cookieMixin from '@/mixins/cookieMixin';
   import { mapActions, mapGetters } from 'vuex';
   import { namespace, Action } from 'vuex-class';
   const shared = namespace('shared');
@@ -94,7 +67,7 @@
       ...mapActions(['setLoadingState']),
     },
   })
-  export default class Login extends Mixins(userAuthMixin) {
+  export default class Login extends Mixins(userAuthMixin, cookieMixin) {
     @shared.Getter
     public LOGIN_STATE!: boolean;
 
@@ -105,6 +78,9 @@
 
     @shared.Action
     public saveUserId!: (userId: string) => void;
+
+    @shared.Action
+    public saveUserInfoState!: (userInfo: { userId: string; username: string }) => void;
 
     public loading = false;
     public username = '';
@@ -131,8 +107,9 @@
       const userInfo = {
         username: this.username,
         password: this.password,
-        remember_me: this.rememberMe,
+        rememberMe: this.rememberMe,
       };
+      console.log('user: ', userInfo);
 
       this.setLoadingState(true);
 
@@ -140,15 +117,20 @@
 
       this.login(userInfo).then((result: any) => {
         if (result) {
+          console.log('result: ', result.data);
           if (result.data.message !== 'Invalid login') {
-            this.saveLoginState(true); // save the state
             localStorage.setItem('loggedIn', '1');
-            this.saveUserId(result.data.id);
-            localStorage.user_id = result.data.id;
+            this.saveLoginState(true); // save the state
 
-            // this.saveFooterState(true);
-            this.$router.push('profile');
-            // this.$router.push({ path: `/upload` });
+            this.saveUserInfoState({
+              userId: result.data.id,
+              username: result.data.username,
+            });
+
+            this.setUserIdCookie('user_id_app', result.data.id, userInfo.rememberMe);
+            this.setUserIdCookie('username_app', result.data.username, userInfo.rememberMe);
+
+            this.$router.push('/glams');
           } else {
             this.error_message = result.data.message;
             localStorage.removeItem('loggedIn');
