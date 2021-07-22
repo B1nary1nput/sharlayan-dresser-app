@@ -79,8 +79,6 @@
 
               <v-file-input truncate-length="50" @change="onSelect($event)" multiple ref="imageUpload" name="multi-files"></v-file-input>
 
-              <button @click="printObject(glam)">Hello</button>
-
               <loading-button
                 :color="'primary'"
                 :type="'submit'"

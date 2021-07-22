@@ -14,7 +14,7 @@
           <v-card
             @click="viewGlam(glam)"
             :style="{
-              backgroundImage: glam.screenshots && glam.screenshots.length >= 1 ? `url(${apiEndpoint}/${glam.screenshots[0].destination}/${glam.screenshots[0].filename})` : '',
+              backgroundImage: glam.screenshots && glam.screenshots.length >= 1 ? `url(${glam.screenshots[0].location})` : '',
             }"
           >
             <div class="hover">
