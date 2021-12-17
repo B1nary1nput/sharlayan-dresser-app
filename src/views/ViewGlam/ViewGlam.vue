@@ -4,7 +4,7 @@
 
     <v-container fluid v-if="glam">
       <v-carousel v-if="glam.screenshots" hide-delimiters cycle interval="15000">
-        <v-carousel-item v-for="(item, i) in glam.screenshots" :key="i" :src="item.location" eager>{{ item.location }}</v-carousel-item>
+        <v-carousel-item v-for="(item, i) in glam.screenshots" :key="i" :src="item.location" eager />
       </v-carousel>
 
       <v-row
