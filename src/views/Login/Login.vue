@@ -54,7 +54,6 @@
   import cookieMixin from '@/mixins/cookieMixin';
   import { mapActions, mapGetters } from 'vuex';
   import { namespace, Action } from 'vuex-class';
-  import { Route, Next } from 'vue-router';
   const shared = namespace('shared');
 
   import LoadingButton from '@/components/LoadingButton/LoadingButton.vue';
