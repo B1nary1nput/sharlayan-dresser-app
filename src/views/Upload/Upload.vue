@@ -104,6 +104,7 @@
   import { namespace } from 'vuex-class';
   import userAuthMixin from '@/mixins/userAuthMixin';
   import { IGlam } from '@/interface/glam';
+  import { Route, Next } from 'vue-router';
   const shared = namespace('shared');
 
   const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;

@@ -1,10 +1,11 @@
 
 import Axios from 'axios'
 import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator'
+import { Component, Mixins, Watch } from 'vue-property-decorator'
 import { Action, namespace } from 'vuex-class'
 const shared = namespace('shared');
 import VueRouter, { Route } from 'vue-router'
+import cookieMixin from './cookieMixin';
 
 const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 
@@ -30,15 +31,18 @@ export interface passwordInfo {
   oldPassword: string;
 }
 @Component
-export default class userAuthMixin extends Vue {
+export default class userAuthMixin extends Mixins(cookieMixin) {
+  // @shared.Getter
+  // public LOGIN_STATE!: boolean;
+
   @shared.Getter
-  public LOGIN_STATE!: boolean;
+  public USER_INFO!: any;
 
-  @shared.Action
-  public saveLoginState!: (newName: boolean) => void;
+  // @shared.Action
+  // public saveLoginState!: (newName: boolean) => void;
 
-  @shared.Action
-  public saveUserId!: (userId: string) => void;
+  // @shared.Action
+  // public saveUserId!: (userId: string) => void;
 
   @shared.Action
   public saveUserInfoState!: (userInfo: { userId: string, username: string }) => void;
@@ -47,9 +51,20 @@ export default class userAuthMixin extends Vue {
   // Handle the login request, and set their login status. 
   // Mainly used for menu items and display of the logout button
   public login(user: loginUserInfo): Promise<void> {
-    console.log('user: ', user);
     return Axios.post(`${apiEndpoint}/login`, user, {
       withCredentials: true,
+    })
+  }
+
+
+  // When the user clicks the logout button, remove all traces of their logged in status
+  public async logout(): Promise<void> {
+    this.clearUserInfo();
+
+    Axios.get(`${apiEndpoint}/logout`, {
+      withCredentials: true,
+    }).then(() => {
+      this.$router.push({ path: '/' }) // redirect to login page
     })
   }
 
@@ -58,6 +73,15 @@ export default class userAuthMixin extends Vue {
   public async signup(user: signupUserInfo): Promise<void> {
     return await Axios.post(`${apiEndpoint}/signup`, user).catch(error => {
       return error.response;
+    })
+  }
+
+
+  public async confirmUser(tokenId: string): Promise<void> {
+    return await Axios.post(`${apiEndpoint}/confirmation/${tokenId}`, {
+      withCredentials: true,
+    }).catch(error => {
+      return error.response
     })
   }
 
@@ -78,48 +102,65 @@ export default class userAuthMixin extends Vue {
     const localUserId: string = this.getCookie('user_id_app');
     const localUsername: string = this.getCookie('username_app');
 
-    if (localStorage.getItem('loggedIn') == "1") {
-      this.saveLoginState(true);
-      this.saveUserId(localUserId);
+    // if user and id cookies doesn't exist
+    if (localUserId.length <= 0 && localUsername.length <= 0) {
+      this.logout();
 
-      this.saveUserInfoState({
-        userId: localUserId,
-        username: localUsername
+
+      this.$router.push({
+        path: '/'
+      }).catch((err) => {
+        console.error('❌ ', err);
       })
-      return;
-    }
-
-
-    if (!localStorage.getItem('loggedIn') || !this.LOGIN_STATE) {
-      localStorage.removeItem('loggedIn')
-      localStorage.removeItem('user_id')
-      this.saveLoginState(false)
-      // this.$router.push({ path: '/' }).catch((err) => { console.error("🤷‍♂️") })
     }
   }
 
-  // When the user clicks the logout button, remove all traces of their logged in status
-  public async logout(): Promise<void> {
-    localStorage.removeItem('user_id')
-    Axios.get(`${apiEndpoint}/logout`, {
-      withCredentials: true,
-    }).then(() => {
-      this.saveLoginState(false)
-      localStorage.removeItem('loggedIn')
-      this.$router.push({ path: '/' }) // redirect to login page
-    })
+
+  public redirectIfLoggedIn(): void {
+    const localUserId: string = this.getCookie('user_id_app');
+    const localUsername: string = this.getCookie('username_app');
+
+    // if user and id cookies doesn't exist
+    if (localUserId.length > 0 && localUsername.length > 0) {
+      if (localStorage.getItem('loggedIn') == "1") {
+        this.storeUserInfo(localUserId, localUsername);
+      }
+
+      this.$router.push({
+        path: '/glams'
+      }).catch((err) => {
+        console.error('❌ ', err);
+      })
+    }
   }
 
 
-  public async confirmUser(tokenId: string): Promise<void> {
-    return await Axios.post(`${apiEndpoint}/confirmation/${tokenId}`, {
-      withCredentials: true,
-    }).catch(error => {
-      return error.response
+  // generic method for saving userinfo in cookies and store
+  public storeUserInfo(userId: string, username: string, rememberMe?: boolean): void {
+    localStorage.setItem('loggedIn', '1');
+    this.saveLoginState(true);
+    this.saveUserId(userId);
+
+    this.saveUserInfoState({
+      userId: userId,
+      username: username
     })
+
+    this.setUserIdCookie('user_id_app', userId, rememberMe);
+    this.setUserIdCookie('username_app', username, rememberMe);
   }
 
-  public getCookie(cookieName: string): string {
-    return document.cookie.match('(^|;)\\s*' + cookieName + '\\s*=\\s*([^;]+)')?.pop() || ''
+
+  // generic method for clearing userinfo in cookies and store
+  public clearUserInfo(): void {
+    // remove logininfo from localstorage and cookies
+    localStorage.removeItem('loggedIn');
+    this.deleteCookie('user_id_app');
+    this.deleteCookie('username_app');
+    this.saveLoginState(false);
+    this.saveUserInfoState({
+      userId: '',
+      username: ''
+    })
   }
 }

@@ -130,11 +130,13 @@
 
     // lifecycle
     created(): void {
-      this.redirectIfNotLoggedIn();
       window.addEventListener('scroll', this.handleScroll);
     }
 
     mounted(): void {
+      // check if user is logged in
+      this.redirectIfNotLoggedIn();
+
       const { id } = this.$router.currentRoute.params;
 
       Axios.get(`${apiEndpoint}/userGlamGet/${this.USER_ID}/${id}`, {
@@ -148,7 +150,6 @@
         })
         .finally(() => {
           this.loading = false;
-          console.log('this.glam: ', this.glam);
         });
 
       // this.handleScroll();

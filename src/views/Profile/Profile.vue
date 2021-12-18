@@ -52,6 +52,7 @@
   import { namespace } from 'vuex-class';
   import userAuthMixin from '@/mixins/userAuthMixin';
   import { IGlam } from '@/interface/glam';
+  import { Route, Next } from 'vue-router';
   const shared = namespace('shared');
 
   const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
@@ -64,20 +65,19 @@
     public LOGIN_STATE!: boolean;
 
     @shared.Getter
-    public USER_ID!: string;
+    public USER_INFO!: any;
 
     public glams: [] = [];
     public loading = true;
     public _timerId: any;
+    public presentPath: string;
     public apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 
     // lifecycle
-    created(): void {
-      this.redirectIfNotLoggedIn();
-    }
-
     mounted(): void {
-      Axios.get(`${apiEndpoint}/userGlamsGet/${this.USER_ID}`, {
+      this.redirectIfNotLoggedIn();
+
+      Axios.get(`${apiEndpoint}/userGlamsGet/${this.USER_INFO.userId}`, {
         withCredentials: true,
       })
         .then((res) => {

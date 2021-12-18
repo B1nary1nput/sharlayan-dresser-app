@@ -54,6 +54,7 @@
   import cookieMixin from '@/mixins/cookieMixin';
   import { mapActions, mapGetters } from 'vuex';
   import { namespace, Action } from 'vuex-class';
+  import { Route, Next } from 'vue-router';
   const shared = namespace('shared');
 
   import LoadingButton from '@/components/LoadingButton/LoadingButton.vue';
@@ -90,7 +91,8 @@
 
     public isLoggedIn = true;
 
-    beforeCreate(): void {
+    mounted(): void {
+      this.redirectIfLoggedIn();
       // let localStorageLogin = localStorage.getItem('loggedIn') == "1"
       // let storeLoginState = this.LOGIN_STATE ? this.LOGIN_STATE : localStorageLogin
       // if (localStorageLogin) {
@@ -109,7 +111,6 @@
         password: this.password,
         rememberMe: this.rememberMe,
       };
-      console.log('user: ', userInfo);
 
       this.setLoadingState(true);
 
@@ -117,29 +118,22 @@
 
       this.login(userInfo).then((result: any) => {
         if (result) {
-          console.log('result: ', result.data);
           if (result.data.message !== 'Invalid login') {
-            localStorage.setItem('loggedIn', '1');
-            this.saveLoginState(true); // save the state
+            this.storeUserInfo(result.data.id, result.data.username, userInfo.rememberMe);
 
-            this.saveUserInfoState({
-              userId: result.data.id,
-              username: result.data.username,
+            this.$router.push({
+              path: '/glams',
+              params: {
+                previousPath: '/',
+              },
             });
-
-            this.setUserIdCookie('user_id_app', result.data.id, userInfo.rememberMe);
-            this.setUserIdCookie('username_app', result.data.username, userInfo.rememberMe);
-
-            this.$router.push('/glams');
           } else {
             this.error_message = result.data.message;
-            localStorage.removeItem('loggedIn');
-            this.saveLoginState(false);
+            this.clearUserInfo();
           }
         } else {
           EventBus.$emit('CancelTimeout', true);
-          localStorage.removeItem('loggedIn');
-          this.saveLoginState(false);
+          this.clearUserInfo();
         }
 
         this.loading = false;
