@@ -118,6 +118,9 @@
     @shared.Getter
     public USER_ID!: string;
 
+    @shared.Getter
+    public CURRENT_ORDER!: string;
+
     @Ref('imageUpload') readonly imageUpload!: HTMLInputElement;
 
     public items: [] = [];
@@ -139,6 +142,7 @@
       jobs: [],
       gender: '',
       screenshots: null,
+      order: 99,
       items: {
         weapon: {},
         shield: {},
@@ -232,11 +236,12 @@
     }
 
     public async printObject(glam: IGlam): Promise<void> {
+      // update the order
+      this.glam.order = this.CURRENT_ORDER;
+
       this.loading = true;
-      console.log('this.hasScreenshots: ', this.hasScreenshots);
       try {
         if (this.hasScreenshots) {
-          console.log('wjebf');
           // send the images and return the image paths after upload
           await Axios.post(`${apiEndpoint}/userGlamScreenshot/${this.USER_ID}`, this.formData, {
             headers: {

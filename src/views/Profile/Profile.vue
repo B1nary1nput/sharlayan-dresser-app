@@ -9,7 +9,7 @@
         </v-col>
       </v-row>
 
-      <v-row v-if="!loading">
+      <draggable v-if="!loading" v-model="glams" group="people" @start="drag = true" @end="drag = false" class="row" @change="log($event)">
         <v-col cols="12" xs="12" md="3" v-for="(glam, index) in glams" :key="index">
           <v-card
             @click="viewGlam(glam)"
@@ -19,6 +19,7 @@
           >
             <div class="hover">
               <div class="text">
+                <h1>{{ glam.order }}</h1>
                 <h1>{{ glam.name }}</h1>
                 <p>{{ glam.description }}</p>
               </div>
@@ -32,7 +33,7 @@
             </div>
           </v-card>
         </v-col>
-      </v-row>
+      </draggable>
 
       <v-btn class="upload-button mx-2" fab dark large color="primary" :to="'/upload'">
         <v-icon dark>
@@ -49,22 +50,29 @@
   import ItemSearchInput from '@/components/ItemSearchInput/ItemSearchInput.vue';
   import LoadingButton from '@/components/LoadingButton/LoadingButton.vue';
   import PageLoading from '@/components/PageLoading/PageLoading.vue';
-  import { namespace } from 'vuex-class';
+  import { namespace, Action } from 'vuex-class';
   import userAuthMixin from '@/mixins/userAuthMixin';
   import { IGlam } from '@/interface/glam';
+  import draggable from 'vuedraggable';
+  import apiMethods from '@/mixins/apiMethods';
+
   const shared = namespace('shared');
 
   const apiEndpoint = process.env.VUE_APP_API_ENDPOINT;
 
   @Component({
-    components: { ItemSearchInput, LoadingButton, PageLoading },
+    components: { ItemSearchInput, LoadingButton, PageLoading, draggable },
   })
-  export default class Upload extends Mixins(userAuthMixin) {
+  export default class Upload extends Mixins(userAuthMixin, apiMethods) {
     @shared.Getter
     public LOGIN_STATE!: boolean;
 
     @shared.Getter
     public USER_INFO!: any;
+    // public CURRENT_ORDER!: any;
+
+    @shared.Action
+    public saveCurrentOrderState!: (currentOrder: number) => void;
 
     public glams: [] = [];
     public loading = true;
@@ -79,7 +87,14 @@
         withCredentials: true,
       })
         .then((res) => {
-          this.glams = res.data.glams;
+          // sort the glams based on order
+          let glams: [] = res.data.glams;
+          let sortedGlams = glams.sort((a, b) => a.order - b.order);
+
+          // save and add 1 to current length to find the correct order
+          this.saveCurrentOrderState(sortedGlams.length + 1);
+
+          this.glams = sortedGlams;
         })
         .catch((err) => {
           console.error('Error: ', err);
@@ -165,6 +180,33 @@
         default:
           return folderId + '/062142.png';
       }
+    }
+
+    public async log(input: any): void {
+      const glam = input.moved.element;
+
+      for (let index = 0; index < this.glams.length; index++) {
+        const element = this.glams[index];
+
+        element.order = index + 1;
+
+        await Axios.post(`${apiEndpoint}/userGlamUpdate/${this.USER_ID}`, element, {
+          withCredentials: true,
+        }).catch((err) => {
+          console.error('Error: ', err);
+        });
+      }
+
+      // let toUpdate = this.glams.find((glamElement) => glamElement._id == glam._id);
+      // console.log('toUpdate: ', toUpdate);
+
+      // this.updateGlams(this.glams)
+      //   .catch((err) => {
+      //     console.error('Error: ', err);
+      //   })
+      //   .finally(() => {
+      //     this.loading = false;
+      // });
     }
   }
 </script>

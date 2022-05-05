@@ -15,7 +15,8 @@ const sharedModule: Module<any, any> = {
     userInfo: {
       username: '',
       userId: ''
-    }
+    },
+    currentOrder: 1
   },
 
   // Mutations set/change the state, should ideally need actions to run
@@ -42,6 +43,10 @@ const sharedModule: Module<any, any> = {
 
     setUserInfoState(state, userInfoState) {
       state.userInfo = userInfoState;
+    },
+
+    setCurrentOrderState(state, currentOrderState) {
+      state.currentOrder = currentOrderState;
     }
   },
 
@@ -90,6 +95,12 @@ const sharedModule: Module<any, any> = {
     }, userInfoState) {
       commit('setUserInfoState', userInfoState);
     },
+
+    saveCurrentOrderState({
+      commit,
+    }, currentOrderState) {
+      commit('setCurrentOrderState', currentOrderState);
+    },
   },
 
   // Used in the frontend to display the data
@@ -105,7 +116,9 @@ const sharedModule: Module<any, any> = {
 
     USER_ID: state => state.userId,
 
-    USER_INFO: state => state.userInfo
+    USER_INFO: state => state.userInfo,
+
+    CURRENT_ORDER: state => state.currentOrder
   },
 }
 

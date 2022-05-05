@@ -112,6 +112,9 @@ export default class userAuthMixin extends Mixins(cookieMixin) {
       }).catch((err) => {
         console.error('❌ ', err);
       })
+    } else {
+      // if the user turns out to be logged in, just store the info in the vuex store
+      this.storeUserInfo(localUserId, localUsername);
     }
   }
 

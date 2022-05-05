@@ -45,4 +45,14 @@ export default class userAuthMixin extends Vue {
     })
   }
 
+
+
+  public async updateGlams(glams: IGlam[]): Promise<void> {
+    return await Axios.post(`${apiEndpoint}/userGlamUpdate/${this.USER_ID}`, {
+      withCredentials: true
+    }).catch(error => {
+      return error.response;
+    })
+  }
+
 }
